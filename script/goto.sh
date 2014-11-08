@@ -34,7 +34,7 @@ goto () {
   # Clear result var
   GOTO_=
 
-  $GOTO_BIN $@
+  $GOTO_BIN "$@"
   return $?
 
 }
