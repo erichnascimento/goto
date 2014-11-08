@@ -29,29 +29,34 @@ The most commonly used goto commands are:
 
 ```
 $ goto add myproject ~/dev/myproject "My Project Folder"
+$ goto add music ~/Music "Personal music dir"
 ```
 
 ### List paths
-
+List all entries in alphabetic order
 ```
 $ goto list
-  myproject    "My Project Folder"
+  music       Personal music dir
+  myproject   My Project Folder   
 ```
 
 ### Go to path
-
+Navigate to path entry
 ```
 $ goto myproject
 $ pwd
-~/dev/myproject
+/home/erichnascimento/dev/myproject
+$ goto music
+$ pwd
+/home/erichnascimento/Music
 ```
 
-### Delete a path
-
+### Delete a path entry
+Remove a path entry from index
 ```
+$ goto rm myproject
 $ goto myproject
   Sorry, path entry "myproject" not found...
-
 ```
 
 # License
