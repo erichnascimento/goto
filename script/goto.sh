@@ -8,7 +8,7 @@
 # Try use goto program from env var
 # otherwise search in path
 # 
-GOTO_BIN=${GOTO_BIN:-`which gotos`}
+GOTO_BIN=${GOTO_BIN:-`which goto`}
 
 #
 # Wrapper function for cd command
@@ -21,7 +21,7 @@ goto () {
 
   # When user try go to a path (goto <name>)...
   if [ $# = 1 ] && [ $@ != "list" ] && [[ "$@" =~ ^[^-] ]] ; then
-    GOTO_=`$GOTO_BIN $@`
+    GOTO_=`$GOTO_BIN "$@"`
     if [ ! -z $GOTO_ ]; then
       cd $GOTO_
       return 0
@@ -36,5 +36,4 @@ goto () {
 
   $GOTO_BIN "$@"
   return $?
-
 }
