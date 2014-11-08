@@ -1,60 +1,75 @@
 package main
 
 import "fmt"
+import "github.com/tj/docopt"
 import "github.com/erichnascimento/goto/pkg"
 
 const VERSION string = "0.0.1"
 
+const Usage = `
+  Usage: 
+    goto list
+    goto add <name> <path> [<description>]
+    goto rm <name>
+    goto <name>
+
+  The most commonly used goto commands are:
+    add        Add an entry to the index
+    list       List all entries indexed
+    rm         Remove a entry from index
+
+`
+
+func add(name, path, description interface{}) {
+  var desc string
+  if description != nil {
+    desc = description.(string)
+  }
+  gotopath.Add(name.(string), path.(string), desc)
+}
+
+func list() {
+  fmt.Println(gotopath.List())
+}
+
+func getPath(name string) {
+  path := gotopath.GetPath(name)
+  if path != "" {
+    fmt.Println(path)
+  }
+}
+
+func del(name string) {
+  gotopath.Delete(name)
+}
+
 func main() {
+  args, _ := docopt.Parse(Usage, nil, true, VERSION, false)
+  //fmt.Println(args)
 
   defer gotopath.Close()
+
+  switch {
+    case args["add"].(bool):
+      add(args["<name>"], args["<path>"], args["<description>"])
+
+    case args["list"].(bool):
+      list()
+
+    case args["rm"].(bool):
+      del(args["<name>"].(string))
+
+    default:
+      getPath(args["<name>"].(string))
+  }
+
+
+  /*defer gotopath.Close()
 
   gotopath.Add("name", "path", "Description")
   gotopath.List()
   fmt.Print(gotopath.GoTo("name"))
   gotopath.Delete("name")
+  */
 
-  /*
-
-  // Try get the file path
-  dbFile, err := getDBFilePath()
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  // open db
-  db := mapdb.OpenDB(dbFile, func () {
-    mapdb.Register(PathEntry{})
-  })
-
-  defer db.Close()
-
-  //db.Set("selecty", NewPathEntry("~/dev/selecty", "Projeto Selecty"))
-  //db.Set("goto", NewPathEntry("~/dev/goto", "Projeto Goto"))
-  //db.Set("selecty-mobile", NewPathEntry("~/dev/selecty-mobile", "Projeto Selecty Mobile"))
-  //entry := db.Get("selecty")
-  //fmt.Println(entry)
-  //
-  var entry *PathEntry
-
-  db.Set("goto", NewPathEntry("~/dev/playground", "goto Project wrote in golang"))
-  entry = db.Get("goto").(*PathEntry)
-  fmt.Print(entry.ExpandPath())
-
-  //fmt.Println(db.Keys())
-
-  //db.Del("selecty")
-  //entry = db.Get("selecty")
-  //fmt.Println(entry)
-
-  //db.Set("selecty", "~/dev/selecty")
-  //entry = db.Get("selecty")
-  //fmt.Println(entry)
-
-  //fmt.Println(db.GetFileName())
-  err = db.Save()
-  if err != nil {
-    fmt.Println(err)
-  }
-  //fmt.Println(dbFile)*/
 }

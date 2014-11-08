@@ -1,5 +1,6 @@
 package gotopath
 
+import "fmt"
 import "log"
 import "github.com/erichnascimento/mapdb"
 import homeDir "github.com/mitchellh/go-homedir"
@@ -46,21 +47,47 @@ func getDatabase() *mapdb.MapDB {
 
 func Add(name, path, description string) *PathEntry {
   pathEntry := newPathEntry(path, description)
-  getDatabase().Set(name, pathEntry)
+
+  db := getDatabase()
+  db.Set(name, pathEntry)
+  db.Save()
   return pathEntry
 }
 
-func List() {
+func getEntry(name string) *PathEntry {
+  value := getDatabase().Get(name)
+  if value != nil {
+    entry := value.(PathEntry)
+    return &entry
+  }
 
+  return nil
+}
+
+func List() (str string) {
+  db := getDatabase()
+  for _, name := range db.Keys() {
+    if entry := getEntry(name); entry != nil {
+      str += fmt.Sprintf("  \033[1;32m%-12s\033[0m%s\n", name, entry.Description)
+    }
+  }
+
+  return
 }
 
 func Delete(name string) {
-  getDatabase().Del(name)
+  db := getDatabase()
+  db.Del(name)
+  db.Save()
 }
 
-func GoTo(name string) string {
-  entry := getDatabase().Get(name).(*PathEntry)
-  return entry.ExpandPath()
+func GetPath(name string) string {
+  entry := getEntry(name)
+  if entry != nil {
+    return entry.ExpandPath()
+  }
+
+  return ""
 }
 
 func Close() {
