@@ -8,6 +8,11 @@ A simple utility which may be used for manage your personal or project folders
 $ go get github.com/erichnascimento/goto
 ```
 
+Append this line in your `~/.bashrc` or `~/.bash_aliases` file
+```
+. $GOPATH/src/github.com/erichnascimento/goto/script/goto.sh
+```
+
 ## Usage
 
 ```
