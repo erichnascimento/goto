@@ -1,6 +1,6 @@
 # goto
 
-A simple utility which may be used for manage your personal or project folders
+A simple utility which may be used to manage and navigate on your favorite folders
 
 ## Instalation
 
